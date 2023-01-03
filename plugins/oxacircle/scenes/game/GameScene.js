@@ -49,6 +49,7 @@ class GameScene extends Phaser.Scene {
   }
 
   create() {
+
     this.matter.world.disableGravity();
     this.ui = new UI(this);
     this.intro = new Intro(this.events);

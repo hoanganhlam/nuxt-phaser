@@ -14,6 +14,7 @@ class Player extends Phaser.Physics.Matter.Sprite {
 
   constructor(scene, x = Player.CONFIG.POS.INITIAL_X, y = Player.CONFIG.POS.Y) {
     super(scene.matter.world, x, y, 'dino', Player.CONFIG.FRAMES.INITIAL);
+    console.log("A");
     this.displayWidth = 32
     this.displayHeight = 32
     // this.width = 120

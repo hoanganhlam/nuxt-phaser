@@ -1,5 +1,5 @@
 <template>
-  <div class="font-mono">
+  <div class="font-mono bg-[#21263f]">
     <div class="content-wrapper">
       <div class="main-wrapper">
         <div class="flex-1">
