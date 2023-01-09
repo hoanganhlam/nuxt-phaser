@@ -28,9 +28,18 @@ class AnimationManager {
     scene.anims.create({
       key: 'idle',
       frames: scene.anims.generateFrameNumbers('nino-doux', {
-        frames: [18, 19, 20, 21, 22, 23, 34, 25],
+        frames: [1, 2, 3, 4],
       }),
       frameRate: 8,
+      repeat: -1
+    });
+
+    scene.anims.create({
+      key: 'run',
+      frames: scene.anims.generateFrameNumbers('nino-doux', {
+        frames: [18, 19, 20, 21, 22, 23, 34, 25],
+      }),
+      frameRate: 16,
       repeat: -1
     });
   }

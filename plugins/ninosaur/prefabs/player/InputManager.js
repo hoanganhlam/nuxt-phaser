@@ -12,7 +12,7 @@ class InputManager {
     this.scene = player.scene;
     this.cursors = player.scene.input.keyboard.createCursorKeys();
     player.scene.input.keyboard.on('keydown-SPACE', function (event) {
-      player.jump();
+      player.isReverse = !player.isReverse
     });
   }
 
@@ -24,40 +24,9 @@ class InputManager {
     if (player.isDead) {
       return;
     }
+    if (this.cursors.space.isDown) {
 
-    if (player.isOnFloor) {
-      if (this.isDuckKeyPressed) {
-        player.duck();
-      } else if (this.isJumpKeyPressed) {
-        console.log("A");
-
-      } else {
-        player.run();
-      }
     }
-  }
-
-  /**
-   * Check if duck key is pressed
-   * @readonly
-   * @returns {boolean}
-   */
-  get isDuckKeyPressed() {
-    return this.cursors.down.isDown;
-  }
-
-  /**
-   * Check if jump key is pressed
-   * @readonly
-   * @returns {boolean}
-   */
-  get isJumpKeyPressed() {
-    const { activePointer } = this.scene.input;
-    return (
-      this.cursors.up.isDown ||
-      this.cursors.space.isDown ||
-      (activePointer.isDown && activePointer.wasTouch)
-    );
   }
 }
 

@@ -6,7 +6,7 @@ import AnimationManager from './AnimationManager';
 
 let gameOptions = {
   gameGravity: 0.2,
-  heroSpeed: 1.5,
+  heroSpeed: 1,
 }
 
 const SIDE_UP = 0;
@@ -45,6 +45,7 @@ class Player extends Phaser.Physics.Matter.Sprite {
     scene.add.existing(this)
     this.direction = SIDE_UP;
     this.rotating = false;
+    this.isReverse = true
   }
 
   /**
@@ -55,7 +56,11 @@ class Player extends Phaser.Physics.Matter.Sprite {
       this.animationManager.update();
     }
     if (!this.rotating) {
-      this.moveClockwise()
+      if (this.isReverse) {
+        this.moveCounterClockwise()
+      } else {
+        this.moveClockwise()
+      }
       this.checkRotation()
     }
   }
@@ -154,16 +159,16 @@ class Player extends Phaser.Physics.Matter.Sprite {
     this.setFlipX(true);
     switch(this.direction){
       case SIDE_UP:
-        this.setVelocity(-gameOptions.heroSpeed, this.body.velocity.y);
+        this.setVelocity(-gameOptions.heroSpeed, gameOptions.gameGravity);
         break;
       case SIDE_DOWN:
-        this.setVelocity(gameOptions.heroSpeed, this.body.velocity.y);
+        this.setVelocity(gameOptions.heroSpeed, -gameOptions.gameGravity);
         break;
       case SIDE_LEFT:
-        this.setVelocity(this.body.velocity.x, gameOptions.heroSpeed);
+        this.setVelocity(gameOptions.gameGravity, gameOptions.heroSpeed);
         break;
       case SIDE_RIGHT:
-        this.setVelocity(this.body.velocity.x, -gameOptions.heroSpeed);
+        this.setVelocity(-gameOptions.gameGravity,- gameOptions.heroSpeed);
         break;
     }
   }
@@ -208,51 +213,84 @@ class Player extends Phaser.Physics.Matter.Sprite {
     const playerBounds = this.getBounds()
     const wallBounds = this.scene.wall.getBounds()
     const wallPX = this.scene.wall.x
-    switch(this.direction) {
-      case SIDE_UP:
-        if(playerBounds.left > wallBounds.right + wallPX - this.displayWidth / 2){
-          this.handleRotation(
-            1,
-            wallPX + wallBounds.right + this.displayWidth / 2,
-            wallPX + wallBounds.top + this.displayHeight / 2
-          );
-        }
-        if(playerBounds.right < wallBounds.left + wallPX - this.displayWidth / 2){
-        }
-        break;
-      case SIDE_RIGHT:
-        if(playerBounds.top > wallBounds.bottom + wallPX - this.displayWidth / 2){
-          this.handleRotation(
-            1,
-            wallPX + wallBounds.bottom - this.displayWidth / 2,
-            wallPX + wallBounds.right + this.displayHeight / 2
-          );
-        }
-        if(playerBounds.bottom < wallBounds.top + wallPX - this.displayWidth / 2){
-        }
-        break;
-      case SIDE_DOWN:
-        if(playerBounds.right < wallBounds.left + wallPX + this.displayWidth / 2){
-          this.handleRotation(
-            1,
-            wallPX + wallBounds.left - this.displayWidth / 2,
-            wallPX + wallBounds.bottom - this.displayHeight / 2
-          );
-        }
-        if(playerBounds.left > wallBounds.right + wallPX + this.displayWidth / 2){
-        }
-        break;
-      case SIDE_LEFT:
-        if(playerBounds.bottom < wallBounds.top + wallPX + this.displayWidth / 2){
-          this.handleRotation(
-            1,
-            wallPX + wallBounds.top + this.displayWidth / 2,
-            wallPX + wallBounds.left - this.displayHeight / 2
-          );
-        }
-        if(playerBounds.top > wallBounds.bottom + wallPX - this.displayWidth / 2){
-        }
-        break;
+    if (this.isReverse) {
+      switch(this.direction) {
+        case SIDE_UP:
+          if (playerBounds.right < wallPX + this.displayWidth / 2){
+            this.handleRotation(
+              -1,
+              wallPX - this.displayWidth / 2,
+              wallPX + this.displayHeight / 2
+            );
+          }
+          break;
+        case SIDE_RIGHT:
+          if(playerBounds.bottom < wallBounds.top + wallPX + this.displayWidth / 2){
+            this.handleRotation(
+              -1,
+              playerBounds.centerX - this.displayWidth / 2,
+              playerBounds.centerY - this.displayWidth / 2
+            );
+          }
+          break;
+        case SIDE_DOWN:
+          if(playerBounds.left > wallPX + wallBounds.right - this.displayWidth / 2){
+            this.handleRotation(
+              -1,
+              playerBounds.centerX + this.displayWidth / 2,
+              playerBounds.centerY - this.displayWidth / 2
+            );
+          }
+          break;
+        case SIDE_LEFT:
+          if(playerBounds.top > wallBounds.bottom + wallPX - this.displayHeight / 2){
+            this.handleRotation(
+              -1,
+              playerBounds.centerX + this.displayWidth / 2,
+              playerBounds.centerY + this.displayWidth / 2
+            );
+          }
+          break;
+      }
+    } else {
+      switch(this.direction) {
+        case SIDE_UP:
+          if(playerBounds.left > wallBounds.right + wallPX - this.displayWidth / 2){
+            this.handleRotation(
+              1,
+              wallPX + wallBounds.right + this.displayWidth / 2,
+              wallPX + wallBounds.top + this.displayHeight / 2
+            );
+          }
+          break;
+        case SIDE_RIGHT:
+          if(playerBounds.top > wallBounds.bottom + wallPX + this.displayWidth / 2){
+            this.handleRotation(
+              1,
+              wallPX + wallBounds.bottom + this.displayWidth / 2,
+              wallPX + wallBounds.right - this.displayHeight / 2
+            );
+          }
+          break;
+        case SIDE_DOWN:
+          if(playerBounds.right < wallBounds.left + wallPX + this.displayWidth / 2){
+            this.handleRotation(
+              1,
+              wallPX + wallBounds.left - this.displayWidth / 2,
+              wallPX + wallBounds.bottom - this.displayHeight / 2
+            );
+          }
+          break;
+        case SIDE_LEFT:
+          if(playerBounds.bottom < wallBounds.top + wallPX + this.displayWidth / 2){
+            this.handleRotation(
+              1,
+              wallPX + wallBounds.top + this.displayWidth / 2,
+              wallPX + wallBounds.left - this.displayHeight / 2
+            );
+          }
+          break;
+      }
     }
   }
 
