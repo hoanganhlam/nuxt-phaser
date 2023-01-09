@@ -12,7 +12,7 @@ class InputManager {
     this.scene = player.scene;
     this.cursors = player.scene.input.keyboard.createCursorKeys();
     player.scene.input.keyboard.on('keydown-SPACE', function (event) {
-      player.isReverse = !player.isReverse
+      player.flip()
     });
   }
 

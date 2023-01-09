@@ -32,7 +32,7 @@ class Player extends Phaser.Physics.Matter.Sprite {
     this.scene = scene
     this.displayWidth = 48
     this.displayHeight = 48
-    this.step = 0.006
+    this.speed = gameOptions.heroSpeed
     this.inputManager = new InputManager(this);
     this.animationManager = new AnimationManager(this);
     // Init image
@@ -45,16 +45,19 @@ class Player extends Phaser.Physics.Matter.Sprite {
     scene.add.existing(this)
     this.direction = SIDE_UP;
     this.rotating = false;
-    this.isReverse = true
+    this.isReverse = false
   }
 
   /**
    * Update player
    */
   update(time) {
-    if (this.isRunning) {
-      this.animationManager.update();
+    if (this.speed < 1.5) {
+      this.speed = this.speed + 0.0006
+    } else {
+      this.run()
     }
+    this.animationManager.update();
     if (!this.rotating) {
       if (this.isReverse) {
         this.moveCounterClockwise()
@@ -63,6 +66,12 @@ class Player extends Phaser.Physics.Matter.Sprite {
       }
       this.checkRotation()
     }
+  }
+
+  flip() {
+    this.isReverse = !this.isReverse
+    this.speed = gameOptions.heroSpeed
+    this.idle()
   }
 
   /**
@@ -91,7 +100,6 @@ class Player extends Phaser.Physics.Matter.Sprite {
    */
   jump() {
     if (this.inputManager.isJumpKeyPressed) {
-      this.step = 0.006
       this.flipX = !this.flipX
     }
   }
@@ -159,16 +167,16 @@ class Player extends Phaser.Physics.Matter.Sprite {
     this.setFlipX(true);
     switch(this.direction){
       case SIDE_UP:
-        this.setVelocity(-gameOptions.heroSpeed, gameOptions.gameGravity);
+        this.setVelocity(-this.speed, gameOptions.gameGravity);
         break;
       case SIDE_DOWN:
-        this.setVelocity(gameOptions.heroSpeed, -gameOptions.gameGravity);
+        this.setVelocity(this.speed, -gameOptions.gameGravity);
         break;
       case SIDE_LEFT:
-        this.setVelocity(gameOptions.gameGravity, gameOptions.heroSpeed);
+        this.setVelocity(gameOptions.gameGravity, this.speed);
         break;
       case SIDE_RIGHT:
-        this.setVelocity(-gameOptions.gameGravity,- gameOptions.heroSpeed);
+        this.setVelocity(-gameOptions.gameGravity,- this.speed);
         break;
     }
   }
@@ -177,16 +185,16 @@ class Player extends Phaser.Physics.Matter.Sprite {
     this.setFlipX(false);
     switch(this.direction){
       case SIDE_UP:
-        this.setVelocity(gameOptions.heroSpeed, gameOptions.gameGravity);
+        this.setVelocity(this.speed, gameOptions.gameGravity);
         break;
       case SIDE_DOWN:
-        this.setVelocity(-gameOptions.heroSpeed, -gameOptions.gameGravity);
+        this.setVelocity(-this.speed, -gameOptions.gameGravity);
         break;
       case SIDE_LEFT:
-        this.setVelocity(gameOptions.gameGravity, -gameOptions.heroSpeed);
+        this.setVelocity(gameOptions.gameGravity, -this.speed);
         break;
       case SIDE_RIGHT:
-        this.setVelocity(-gameOptions.gameGravity, gameOptions.heroSpeed);
+        this.setVelocity(-gameOptions.gameGravity, this.speed);
         break;
     }
   }
@@ -219,8 +227,8 @@ class Player extends Phaser.Physics.Matter.Sprite {
           if (playerBounds.right < wallPX + this.displayWidth / 2){
             this.handleRotation(
               -1,
-              wallPX - this.displayWidth / 2,
-              wallPX + this.displayHeight / 2
+              playerBounds.centerX - this.displayWidth / 2,
+              playerBounds.centerY + this.displayWidth / 2
             );
           }
           break;
@@ -258,17 +266,17 @@ class Player extends Phaser.Physics.Matter.Sprite {
           if(playerBounds.left > wallBounds.right + wallPX - this.displayWidth / 2){
             this.handleRotation(
               1,
-              wallPX + wallBounds.right + this.displayWidth / 2,
-              wallPX + wallBounds.top + this.displayHeight / 2
+              playerBounds.centerX + this.displayWidth / 2,
+              playerBounds.centerY + this.displayWidth / 2
             );
           }
           break;
         case SIDE_RIGHT:
-          if(playerBounds.top > wallBounds.bottom + wallPX + this.displayWidth / 2){
+          if(playerBounds.top > wallBounds.bottom + wallPX - this.displayWidth / 2){
             this.handleRotation(
               1,
-              wallPX + wallBounds.bottom + this.displayWidth / 2,
-              wallPX + wallBounds.right - this.displayHeight / 2
+              playerBounds.centerX - this.displayWidth / 2,
+              playerBounds.centerY + this.displayWidth / 2
             );
           }
           break;
@@ -276,8 +284,8 @@ class Player extends Phaser.Physics.Matter.Sprite {
           if(playerBounds.right < wallBounds.left + wallPX + this.displayWidth / 2){
             this.handleRotation(
               1,
-              wallPX + wallBounds.left - this.displayWidth / 2,
-              wallPX + wallBounds.bottom - this.displayHeight / 2
+              playerBounds.centerX - this.displayWidth / 2,
+              playerBounds.centerY - this.displayWidth / 2
             );
           }
           break;
@@ -285,8 +293,8 @@ class Player extends Phaser.Physics.Matter.Sprite {
           if(playerBounds.bottom < wallBounds.top + wallPX + this.displayWidth / 2){
             this.handleRotation(
               1,
-              wallPX + wallBounds.top + this.displayWidth / 2,
-              wallPX + wallBounds.left - this.displayHeight / 2
+              playerBounds.centerX + this.displayWidth / 2,
+              playerBounds.centerY - this.displayWidth / 2
             );
           }
           break;

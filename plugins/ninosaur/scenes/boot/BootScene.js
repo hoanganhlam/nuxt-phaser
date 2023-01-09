@@ -20,7 +20,6 @@ class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.atlas('dino', '/dino/sprites/dino-atlas.png', '/dino/sprites/dino-atlas.json');
     this.load.tilemapTiledJSON('ninosaur', '/ninosaur/map.json');
     this.load.image('cavesofgallet_tiles', '/ninosaur/cavesofgallet_tiles.png');
     this.load.spritesheet('nino-doux', '/ninosaur/sprite/doux.png', { frameWidth: 24, frameHeight: 24 });
