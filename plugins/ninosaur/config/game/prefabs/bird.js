@@ -1,7 +1,7 @@
 const BIRD = {
   FRAMES: {
-    INITIAL: 'bird-1',
-    FLYING: ['bird-1', 'bird-2'],
+    INITIAL: 'tree-1',
+    FLYING: ['tree-1', 'tree-2'],
   },
   POS: {
     Y: [225, 250, 275],

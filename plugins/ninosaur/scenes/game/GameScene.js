@@ -5,7 +5,7 @@ import CONFIG from '../../config/game';
 import InputManager from './InputManager';
 import SoundManager from './SoundManager';
 import Player from '../../prefabs/player/Player';
-
+import Obstacles from '../../prefabs/obstacles';
 
 /**
  * Main game scene
@@ -38,6 +38,22 @@ class GameScene extends Phaser.Scene {
 
     this.playerCategory = this.matter.world.nextCategory();
     this.player = new Player(this);
+    this.obstacles = new Obstacles(this)
+
+    this.anims.create({
+      key: 'mushroom_eat',
+      frames: [
+        {key: 'mushroom_1'},
+        {key: 'mushroom_2'},
+        {key: 'mushroom_3'},
+        {key: 'mushroom_4'}
+      ],
+      frameRate: 16,
+      repeat: -1
+    });
+
+    // const x = this.matter.add.sprite(200 , 40, 'mushroom_1')
+    // x.setBounce(0.96)
   }
 
   update(time, delta) {

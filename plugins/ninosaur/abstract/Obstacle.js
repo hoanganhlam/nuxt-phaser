@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import CONFIG from '../../../config/game';
+import CONFIG from '../config/game';
 
 /**
  * Obstacle
@@ -16,27 +16,18 @@ class Obstacle extends Phaser.Physics.Matter.Sprite {
    * @param {string} frame - The frame from the Texture this Obstacle is rendering with
    */
   constructor(scene, x, y, frame) {
-    const radians = Phaser.Math.DegToRad(Phaser.Math.Between(0, 360));
-    x = 400 + 270 * Math.cos(radians);
-    y = 400 + 270 * Math.sin(radians);
-    super(scene.matter.world, x, y, 'dino', frame);
-    const angleDeg = Math.atan2(this.y - 400, this.x - 400) * 180 / Math.PI;
-    this.angle = angleDeg + 90
-    this.setScale(0.5);
-    this.setOrigin(0.5, 0.5);
-    this.setDepth(900);
-    this.scene.events.on(CONFIG.EVENTS.GAME_OVER, this.freeze, this);
+    super(scene.matter.world, x, y, frame);
     this.timeout = 400
+    this.setOrigin(0, 0)
+    this.scene = scene
+    this.scene.events.on(CONFIG.EVENTS.GAME_OVER, this.freeze, this);
     this.scene.add.existing(this);
-    this.setAlpha(0)
-    scene.tweens.add({
+    this.scene.tweens.add({
       targets: this,
       alpha: { value: 1, duration: 2000, ease: 'Power1' },
     });
-    this.scene = scene
+    this.setAlpha(0)
     this.setStatic(true)
-    this.dying = false
-    this.parentCat = 0
   }
 
   /**

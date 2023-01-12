@@ -1,10 +1,10 @@
-# Bird fly animation spites adjustment
+# Tree fly animation spites adjustment
 
 Due to unequal dimensions of bird fly animation sprites you should adjust `sourceSize` and `spriteSourceSize` for `bird-1` and `bird-2` inside `dino-atlas.json` as follows:
 
 ```json
 {
-  "filename": "bird-1",
+  "filename": "tree-1",
   "rotated": false,
   "trimmed": true,
   "sourceSize": {
@@ -28,7 +28,7 @@ Due to unequal dimensions of bird fly animation sprites you should adjust `sourc
 
 ```json
 {
-  "filename": "bird-2",
+  "filename": "tree-2",
   "rotated": false,
   "trimmed": true,
   "sourceSize": {
