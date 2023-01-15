@@ -48,7 +48,10 @@ class Player extends Phaser.Physics.Matter.Sprite {
     this.idle();
     this.setCollisionCategory(scene.playerCategory)
     this.setOnCollide((x) => {
-      if (x.bodyB.collisionFilter.category === scene.playerCategory && x.bodyA.collisionFilter.category === scene.playerCategory) {
+      if (
+        x.bodyB.collisionFilter.category === x.bodyA.collisionFilter.category &&
+        x.bodyB.gameObject.alpha > 0.9 &&  x.bodyA.gameObject.alpha > 0.9
+      ) {
         this.die()
       }
     })
