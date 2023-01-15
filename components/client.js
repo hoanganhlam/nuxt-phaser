@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Game from "@/components/Game";
-
+import Test from "@/components/Test";
 
 Vue.directive('click-outside', {
   bind: function (el, binding, vnode) {
@@ -19,3 +19,4 @@ Vue.directive('click-outside', {
   },
 });
 Vue.component('game', Game)
+Vue.component('test', Test)

@@ -1,5 +1,5 @@
 <template>
-  <div class="font-mono" :class="{'bg-[#21263f]': $route.name === 'index'}">
+  <div class="font-mono" :class="{'bg-[#dff6f5]': $route.name === 'index'}">
     <div class="content-wrapper">
       <div class="main-wrapper">
         <div class="flex-1">

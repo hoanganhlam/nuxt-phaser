@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import Game from '@/plugins/ninosaur/Game';
-import config from "@/plugins/ninosaur/config";
+import Game from '@/plugins/ninosaur_2/Game';
+import config from "@/plugins/ninosaur_2/config";
 
 export default {
   name: "Game",
@@ -15,6 +15,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+#game canvas {
+  margin: 0 auto!important;
+}
 </style>
