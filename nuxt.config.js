@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -40,6 +42,10 @@ export default {
     '@nuxt/postcss8'
   ],
 
+  publicRuntimeConfig: {
+    API_DOMAIN: process.env.API_DOMAIN
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
   ],
@@ -52,5 +58,8 @@ export default {
         autoprefixer: {}
       }
     }
+  },
+  server: {
+    host: "0.0.0.0"
   }
 }

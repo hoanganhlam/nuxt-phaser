@@ -8,7 +8,7 @@ const PLAYER = {
     DEAD: 'dino-dead',
   },
   POS: {
-    INITIAL_X: 50,
+    INITIAL_X: 100,
     X: 50,
     Y: 50,
   },
@@ -35,6 +35,7 @@ const PLAYER = {
     DUCKING: 'DUCKING',
     JUMPING: 'JUMPING',
     DEAD: 'DEAD',
+    KICK: 'KICK',
   },
 };
 

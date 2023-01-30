@@ -35,12 +35,39 @@ class AnimationManager {
     });
 
     scene.anims.create({
+      key: 'walk',
+      frames: scene.anims.generateFrameNumbers('nino-doux', {
+        frames: [4, 5, 6, 7, 8, 9, 10, 11],
+      }),
+      frameRate: 8,
+      repeat: -1
+    });
+
+    scene.anims.create({
+      key: 'kick',
+      frames: scene.anims.generateFrameNumbers('nino-doux', {
+        frames: [3, 6],
+      }),
+      frameRate: 4,
+      repeat: 1
+    });
+
+    scene.anims.create({
       key: 'run',
       frames: scene.anims.generateFrameNumbers('nino-doux', {
         frames: [18, 19, 20, 21, 22, 23, 34, 25],
       }),
-      frameRate: 16,
+      frameRate: 8,
       repeat: -1
+    });
+
+    scene.anims.create({
+      key: 'jump',
+      frames: scene.anims.generateFrameNumbers('nino-doux', {
+        frames: [4, 5, 6],
+      }),
+      frameRate: 2,
+      repeat: 0
     });
 
     scene.anims.create({
@@ -74,6 +101,11 @@ class AnimationManager {
         player.anims.play('die', true);
         break;
       case STATES.JUMPING:
+        player.anims.play('jump', true);
+        break;
+      case STATES.KICK:
+        player.anims.play('kick', true);
+        break;
       default:
         player.anims.stop();
         player.setFrame(FRAMES.JUMPING);

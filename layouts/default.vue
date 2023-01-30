@@ -1,5 +1,5 @@
 <template>
-  <div class="font-mono" :class="{'bg-[#dff6f5]': $route.name === 'index'}">
+  <div :class="{'bg-[#dff6f5]': $route.name === 'index'}">
     <div class="content-wrapper">
       <div class="main-wrapper">
         <div class="flex-1">
@@ -26,7 +26,7 @@ export default {
       link: [
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          href: "https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap"
         }
       ],
       ...this.getMeta
@@ -75,7 +75,7 @@ export default {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Syne Mono', monospace;
   font-size: 16px;
 }
 
