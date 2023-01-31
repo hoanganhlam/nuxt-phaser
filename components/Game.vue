@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="w-full flex justify-center" id="game"/>
-    <div class="fixed top-4 right-4 w-64 border py-2 px-3 bg-white text-sm">
+    <div class="py-2 px-3 bg-white text-sm">
       <div v-for="item in scores" :key="item.key" class="flex justify-between">
         <div>Unknown Name</div>
         <div>{{ Math.floor(item.score) }} / {{Math.floor(item.totalScore)}}</div>
@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import Game from '@/plugins/ninosaur_2/Game';
-import config from "@/plugins/ninosaur_2/config";
+import Game from '@/plugins/fishing/Game';
+import config from "@/plugins/fishing/config";
 
 export default {
   name: "Game",
@@ -33,13 +33,13 @@ export default {
     }, this);
 
     window.focus();
-    window.intervalx = setInterval(() => {
-      this.scores = Object.keys(window.game.scene.scenes[1].players).map(key => ({
-        key,
-        score: window.game.scene.scenes[1].players[key].score,
-        totalScore: window.game.scene.scenes[1].players[key].totalScore
-      })).sort((x, y) => y.score - x.score)
-    }, 500)
+    // window.intervalx = setInterval(() => {
+    //   this.scores = Object.keys(window.game.scene.scenes[1].players).map(key => ({
+    //     key,
+    //     score: window.game.scene.scenes[1].players[key].score,
+    //     totalScore: window.game.scene.scenes[1].players[key].totalScore
+    //   })).sort((x, y) => y.score - x.score)
+    // }, 500)
   },
   beforeDestroy() {
     if (window.intervalx) {

@@ -27,7 +27,7 @@ export default {
   plugins: [
     {src: '~/components/server.js'},
     {src: '~/components/client.js', mode: 'client'},
-    {src: '~/plugins/mixins.js'},
+    {src: '~/plugins/mixins.js'}
     // { dino: '~/plugins/phaser', mode: 'client' },
     // {dino: '~/plugins/web3/index.js', mode: 'client'},
     // {dino: '~/plugins/axios.js'},
