@@ -76,8 +76,8 @@ class GameScene extends Phaser.Scene {
     const tileWorld = map.addTilesetImage('fishing_tiles');
     this.world = map.createLayer("l1", tileWorld);
     this.world.setPosition(0, 0)
-    this.world.displayWidth = MAIN_CONFIG.scale.width;
-    this.world.displayHeight = MAIN_CONFIG.scale.height;
+    // this.world.displayWidth = MAIN_CONFIG.scale.width;
+    // this.world.displayHeight = MAIN_CONFIG.scale.height;
     this.matter.world.convertTilemapLayer(this.world);
 
     this.chunks = [];
@@ -100,40 +100,40 @@ class GameScene extends Phaser.Scene {
     return chunk;
   }
 
-  updates(time, xxx) {
-    let snappedChunkX = (this.chunkSize * this.tileSize) * Math.round(this.player.x / (this.chunkSize * this.tileSize));
-    let snappedChunkY = (this.chunkSize * this.tileSize) * Math.round(this.player.y / (this.chunkSize * this.tileSize));
-
-    snappedChunkX = snappedChunkX / this.chunkSize / this.tileSize;
-    snappedChunkY = snappedChunkY / this.chunkSize / this.tileSize;
-
-    for (let x = snappedChunkX - 2; x < snappedChunkX + 2; x++) {
-      for (let y = snappedChunkY - 2; y < snappedChunkY + 2; y++) {
-        const existingChunk = this.getChunk(x, y);
-        if (existingChunk == null) {
-          const newChunk = new Chunk(this, x, y);
-          this.chunks.push(newChunk);
-        }
-      }
-    }
-
-    for (let i = 0; i < this.chunks.length; i++) {
-      const chunk = this.chunks[i];
-      if (Phaser.Math.Distance.Between(
-        snappedChunkX,
-        snappedChunkY,
-        chunk.x,
-        chunk.y
-      ) < 3) {
-        if (chunk) {
-          chunk.load();
-        }
-      } else {
-        if (chunk) {
-          chunk.unload();
-        }
-      }
-    }
+  update(time, xxx) {
+    // let snappedChunkX = (this.chunkSize * this.tileSize) * Math.round(this.player.x / (this.chunkSize * this.tileSize));
+    // let snappedChunkY = (this.chunkSize * this.tileSize) * Math.round(this.player.y / (this.chunkSize * this.tileSize));
+    //
+    // snappedChunkX = snappedChunkX / this.chunkSize / this.tileSize;
+    // snappedChunkY = snappedChunkY / this.chunkSize / this.tileSize;
+    //
+    // for (let x = snappedChunkX - 2; x < snappedChunkX + 2; x++) {
+    //   for (let y = snappedChunkY - 2; y < snappedChunkY + 2; y++) {
+    //     const existingChunk = this.getChunk(x, y);
+    //     if (existingChunk == null) {
+    //       const newChunk = new Chunk(this, x, y);
+    //       this.chunks.push(newChunk);
+    //     }
+    //   }
+    // }
+    //
+    // for (let i = 0; i < this.chunks.length; i++) {
+    //   const chunk = this.chunks[i];
+    //   if (Phaser.Math.Distance.Between(
+    //     snappedChunkX,
+    //     snappedChunkY,
+    //     chunk.x,
+    //     chunk.y
+    //   ) < 3) {
+    //     if (chunk) {
+    //       chunk.load();
+    //     }
+    //   } else {
+    //     if (chunk) {
+    //       chunk.unload();
+    //     }
+    //   }
+    // }
 
     this.player.setVelocity(0);
 
