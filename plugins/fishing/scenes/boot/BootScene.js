@@ -24,6 +24,8 @@ class BootScene extends Phaser.Scene {
     });
     this.load.image("sprSand", "/fishing/sprSand.png");
     this.load.image("sprGrass", "/fishing/sprGrass.png");
+    this.load.tilemapTiledJSON('fishing_map', '/fishing/map.json');
+    this.load.image('fishing_tiles', '/fishing/tiles.png');
   }
 
   create() {

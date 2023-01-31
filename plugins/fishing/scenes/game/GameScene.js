@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import CONFIG from '../../config/game';
+import MAIN_CONFIG from "@/plugins/ninosaur_2/config";
 
 class Chunk {
   constructor(scene, x, y) {
@@ -71,6 +72,14 @@ class GameScene extends Phaser.Scene {
     this.chunkSize = 16;
     this.tileSize = 16;
 
+    const map = this.make.tilemap({key: 'fishing_map'});
+    const tileWorld = map.addTilesetImage('fishing_tiles');
+    this.world = map.createLayer("l1", tileWorld);
+    this.world.setPosition(0, 0)
+    this.world.displayWidth = MAIN_CONFIG.scale.width;
+    this.world.displayHeight = MAIN_CONFIG.scale.height;
+    this.matter.world.convertTilemapLayer(this.world);
+
     this.chunks = [];
     // this.cameras.main.setBounds(-500, -500, 500 * 2, 500 * 2);
     // this.matter.world.setBounds(-500, -500, 500 * 2, 500 * 2);
@@ -91,7 +100,7 @@ class GameScene extends Phaser.Scene {
     return chunk;
   }
 
-  update(time, xxx) {
+  updates(time, xxx) {
     let snappedChunkX = (this.chunkSize * this.tileSize) * Math.round(this.player.x / (this.chunkSize * this.tileSize));
     let snappedChunkY = (this.chunkSize * this.tileSize) * Math.round(this.player.y / (this.chunkSize * this.tileSize));
 
