@@ -3,21 +3,14 @@ import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
 
 export default {
   parent: 'game',
-  title: 'Dino',
-  url: 'https://github.com/Autapomorph/dino',
-  version: '1.2.1',
   type: Phaser.WEBGL,
+  width: window.innerWidth,
+  height: window.innerHeight,
   banner: true,
   render: {
     antialias: false,
   },
   backgroundColor: '#dff6f5',
-  scale: {
-    // mode: Phaser.Scale.,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 500,
-    height: 500,
-  },
   physics: {
     default: 'matter',
     matter: {
@@ -33,6 +26,5 @@ export default {
         mapping: "matterCollision" // Where to store in the Scene, e.g. scene.matterCollision
       }
     ]
-  },
-  maxAlpha: 0.75
+  }
 };

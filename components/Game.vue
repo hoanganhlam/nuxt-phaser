@@ -1,12 +1,6 @@
 <template>
   <div>
-    <div class="w-full flex justify-center" id="game"/>
-    <div class="py-2 px-3 bg-white text-sm">
-      <div v-for="item in scores" :key="item.key" class="flex justify-between">
-        <div>Unknown Name</div>
-        <div>{{ Math.floor(item.score) }} / {{Math.floor(item.totalScore)}}</div>
-      </div>
-    </div>
+    <div class="h-screen w-screen flex justify-center" id="game"/>
   </div>
 </template>
 
@@ -25,7 +19,7 @@ export default {
     window.API_DOMAIN = this.$config.API_DOMAIN;
     window.game = new Game(config);
     window.game.events.on('hidden', function () {
-      window.game.scene.scenes[1].players[window.socket.id].idle()
+
     }, this);
 
     window.game.events.on('visible', function () {

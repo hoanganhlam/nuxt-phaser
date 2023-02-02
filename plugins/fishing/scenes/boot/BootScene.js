@@ -26,6 +26,7 @@ class BootScene extends Phaser.Scene {
     this.load.image("sprGrass", "/fishing/sprGrass.png");
     this.load.tilemapTiledJSON('fishing_map', '/fishing/map.json');
     this.load.image('fishing_tiles', '/fishing/tiles.png');
+    this.load.spritesheet('ship_tiles', '/fishing/ships.png', {frameWidth: 32, frameHeight: 32, spacing: 1});
   }
 
   create() {
