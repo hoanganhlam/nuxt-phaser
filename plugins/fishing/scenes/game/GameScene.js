@@ -2723,35 +2723,75 @@ class GameScene extends Phaser.Scene {
   }
 
   create() {
-    layers.forEach((level, i) => {
+    const maps = [
+      {layer: 0, x: 0, y: 0},
+      {layer: 1, x: 480, y: 0},
+      {layer: 2, x: 480, y: 480},
+      {layer: 0, x: 0, y: 480},
+      {layer: 1, x: 0, y: -480},
+      {layer: 2, x: -480, y: -480},
+      {layer: 1, x: -480, y: 0}
+    ]
 
+
+    maps.forEach((map, i) => {
+      setTimeout(() => {
+        const l = []
+        const chunkSize = 30;
+        for (let i = 0; i < layers[map.layer].length; i += chunkSize) {
+          const chunk = layers[map.layer].slice(i, i + chunkSize);
+          l.push(chunk.map(x => x - 1))
+        }
+        const displayMap = this.make.tilemap({
+          data: l,
+          tileWidth: 16,
+          tileHeight: 16
+        });
+        const tiles = displayMap.addTilesetImage(
+          'fishing_tiles',
+          'fishing_tiles', 16, 16, 0, 1
+        );
+        const layer = displayMap.createLayer(0, tiles);
+        layer.setPosition(map.x, map.y);
+        layer.setDepth(-1);
+      }, i * 5000)
     })
-    const map = this.make.tilemap({
-      data: layers[0],
-      tileWidth: 16,
-      tileHeight: 16
-    });
-    const tiles = map.addTilesetImage(
-      'fishing_tiles',
-      'fishing_tiles', 16, 16, 0, 1
-    );
-    const layer = map.createLayer(0, tiles, 0, 0);
-    layer.setDepth(-1)
-
 
     this.chunks = [];
     this.player = this.matter.add.sprite(0, 0, 'ship_tiles', 6);
     this.player.worldX = 0;
     this.player.worldY = 0;
-    this.player.setMass(10);
-    this.player.setFriction(0)
+    this.player.setMass(30);
+    this.player.setFriction(0.5)
     this.player.setFixedRotation();
     this.player.setOrigin(0.5)
-    this.playerSpeed = 0;
 
     this.cameras.main.startFollow(this.player, true);
     this.add.existing(this.player);
     this.cursors = this.input.keyboard.createCursorKeys();
+
+    // const particles = this.add.particles('blue');
+    // const emitter = particles.createEmitter({
+    //   speed: {
+    //     onEmit: function (particle, key, t, value) {
+    //       return this.player.body.speed * 10;
+    //     }.bind(this)
+    //   },
+    //   lifespan: {
+    //     onEmit: function (particle, key, t, value) {
+    //       return Phaser.Math.Percent(this.player.body.speed, 0, 300) * 40000;
+    //     }.bind(this)
+    //   },
+    //   alpha: {
+    //     onEmit: function (particle, key, t, value) {
+    //       return Phaser.Math.Percent(this.player.body.speed, 0, 300) * 1000;
+    //     }.bind(this)
+    //   },
+    //   scale: {start: 1.0, end: 0},
+    //   blendMode: 'ADD'
+    // });
+
+    // emitter.startFollow(this.player);
   }
 
   getChunk(x, y) {
@@ -2798,23 +2838,18 @@ class GameScene extends Phaser.Scene {
     //     }
     //   }
     // }
-
+    const velor = 0.001 * window.devicePixelRatio
     if (this.cursors.left.isDown) {
-      this.player.setAngularVelocity(-0.01);
+      this.player.setAngularVelocity(-velor * 10);
     }
     if (this.cursors.right.isDown) {
-      this.player.setAngularVelocity(0.01);
+      this.player.setAngularVelocity(velor * 10);
     }
     if (this.cursors.up.isDown) {
-      if (this.playerSpeed < 0.0005) {
-        this.playerSpeed = this.playerSpeed + 0.00001
-      }
-      this.player.thrustLeft(this.playerSpeed);
-    } else if (this.cursors.up.isUp) {
-      this.playerSpeed = 0;
+      this.player.thrustLeft(velor);
     }
     if (this.cursors.down.isDown) {
-      this.player.thrustRight(0.00005);
+      this.player.thrustRight(velor);
     }
   }
 }

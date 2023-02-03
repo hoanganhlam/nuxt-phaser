@@ -3,7 +3,7 @@ import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
 
 export default {
   parent: 'game',
-  type: Phaser.WEBGL,
+  type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
   banner: true,
