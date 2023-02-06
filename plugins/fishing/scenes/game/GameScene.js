@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import CONFIG from '../../config/game';
+import DropShadowPostFx from 'phaser3-rex-plugins/plugins/dropshadowpipeline.js';
 
 const layers = require("../../map3.json").layers.map(x => x.data);
 
@@ -60,20 +61,44 @@ class GameScene extends Phaser.Scene {
     })
   }
 
+  spawnShape() {
+    const path = new Phaser.Curves.Path(50, 500);
+    path.lineTo(150, 200);
+    path.cubicBezierTo(400, 500, 200, 100, 400, 100);
+
+    const graphics = this.add.graphics();
+    graphics.clear();
+
+    const x = path.draw(graphics, 100)
+
+    // graphics.fillStyle(Phaser.Display.Color.HexStringToColor("#C7D8AE").color)
+    // graphics.fillPoints(path.getPoints(100))
+  }
+
+
   create() {
-    this.maps = {}
     this.graphics = this.add.graphics();
 
+    this.maps = {}
     this.player = this.matter.add.sprite(0, 0, 'ship');
     this.player.setMass(20);
     this.player.setFriction(0.5);
     this.player.setFixedRotation();
     this.player.setOrigin(0.5);
-    this.player.setSize(32 * window.devicePixelRatio, 32 * window.devicePixelRatio)
+    this.player.setSize(32 * window.devicePixelRatio, 32 * window.devicePixelRatio);
+
+    const postFxPlugin = this.plugins.get('rexDropShadowPipeline');
+    const postFxPipeline = postFxPlugin
+      .add(this.player, {
+        blur: 3,
+        distance: 0,
+        shadowColor: 0xff0000,
+        alpha: 0.3
+      });
 
     this.playerCircle = new Phaser.Geom.Circle(0, 0, 120);
 
-    // this.cameras.main.startFollow(this.player);
+    this.cameras.main.startFollow(this.player);
 
     this.add.existing(this.player);
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -89,6 +114,8 @@ class GameScene extends Phaser.Scene {
       frameRate: 4,
       repeat: -1
     });
+
+    this.spawnShape()
 
     // this.player.anims.play('snooze')
 
@@ -117,7 +144,7 @@ class GameScene extends Phaser.Scene {
   }
 
   update(time, xxx) {
-    this.spawnMap(this.player);
+    // this.spawnMap(this.player);
     const velor = 0.001 * window.devicePixelRatio
     if (this.cursors.left.isDown) {
       this.player.setAngularVelocity(-velor * 5);

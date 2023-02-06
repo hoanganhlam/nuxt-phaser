@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
+import DropShadowPipelinePlugin from 'phaser3-rex-plugins/plugins/dropshadowpipeline-plugin.js';
 
 export default {
   parent: 'game',
@@ -10,12 +11,12 @@ export default {
   // render: {
   //   antialias: false,
   // },
-  backgroundColor: '#dff6f5',
+  backgroundColor: '#B6E8DC',
   physics: {
     default: 'matter',
     matter: {
       gravity: { x: 0, y:0 },
-      debug: false,
+      debug: true,
     },
   },
   plugins: {
@@ -25,6 +26,11 @@ export default {
         key: "matterCollision", // Where to store in Scene.Systems, e.g. scene.sys.matterCollision
         mapping: "matterCollision" // Where to store in the Scene, e.g. scene.matterCollision
       }
-    ]
+    ],
+    global: [{
+      key: 'rexDropShadowPipeline',
+      plugin: DropShadowPipelinePlugin,
+      start: true
+    }]
   }
 };
