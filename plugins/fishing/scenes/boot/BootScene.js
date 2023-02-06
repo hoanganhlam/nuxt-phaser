@@ -18,17 +18,21 @@ class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet("sprWater", "/fishing/sprWater.png", {
+    this.load.path = '/fishing/';
+
+    this.load.spritesheet("sprWater", "sprWater.png", {
       frameWidth: 16,
       frameHeight: 16
     });
-    this.load.image("sprSand", "/fishing/sprSand.png");
-    this.load.image("sprGrass", "/fishing/sprGrass.png");
-    this.load.tilemapTiledJSON('fishing_map', '/fishing/map.json');
-    this.load.image('fishing_tiles', '/fishing/tiles.png');
-    this.load.spritesheet('ship_tiles', '/fishing/ships.png', {frameWidth: 32, frameHeight: 32, spacing: 1});
-    this.load.image('ship', '/fishing/arrow.png');
-    this.load.image('blue', '/fishing/blue.png');
+    this.load.image("sprSand", "sprSand.png");
+    this.load.image("island", "island.png");
+    this.load.image("sprGrass", "sprGrass.png");
+    this.load.tilemapTiledJSON('fishing_map', 'map.json');
+
+    this.load.image('fishing_tiles', 'tiles.png');
+    this.load.image('tilex', 'tilex.png');
+    this.load.spritesheet('ship_tiles', 'ships.png', {frameWidth: 32, frameHeight: 32, spacing: 1});
+    this.load.image('ship', 'ship.png');
   }
 
   create() {

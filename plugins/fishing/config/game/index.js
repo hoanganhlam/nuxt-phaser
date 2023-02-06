@@ -4,8 +4,8 @@ import EVENTS from './events';
 
 const CONFIG = {
   GAME: {
-    WIDTH: 500,
-    HEIGHT: 500,
+    WIDTH: window.innerWidth,
+    HEIGHT: window.innerHeight,
   },
   SCENES,
   PREFABS,

@@ -7,9 +7,9 @@ export default {
   width: window.innerWidth,
   height: window.innerHeight,
   banner: true,
-  render: {
-    antialias: false,
-  },
+  // render: {
+  //   antialias: false,
+  // },
   backgroundColor: '#dff6f5',
   physics: {
     default: 'matter',
