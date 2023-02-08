@@ -1,17 +1,16 @@
 import Phaser from 'phaser';
 import CONFIG from '../../config/game';
-import DropShadowPostFx from 'phaser3-rex-plugins/plugins/dropshadowpipeline.js';
 
-const layers = require("../../map3.json").layers.map(x => x.data);
-
+const chunkSize = 40;
+const tileSize = 16;
+const mapName = 'map5';
+const tileName = 'tiles'
 const maps = [
-  {layer: 0, x: 2000, y: 0},
-  {layer: 0, x: 480, y: 0},
-  {layer: 0, x: 480, y: 480},
-  {layer: 0, x: 0, y: 480},
-  {layer: 0, x: 0, y: -480},
-  {layer: 0, x: -480, y: -480},
-  {layer: 0, x: -480, y: 0}
+  {layer: 1, x: 5, y: 0},
+  {layer: 2, x: 1, y: 0},
+  {layer: 3, x: 2, y: 0},
+  {layer: 4, x: 3, y: 0},
+  {layer: 5, x: 4, y: 0},
 ]
 
 /**
@@ -28,30 +27,28 @@ class GameScene extends Phaser.Scene {
 
   spawnMap(player) {
     maps.forEach((map, i) => {
+      const x = map.x * chunkSize * tileSize
+      const y = map.y * chunkSize * tileSize
       const radius = window.devicePixelRatio * CONFIG.GAME.WIDTH;
       const spawned = Boolean(this.maps[`${map.x}_${map.y}`]);
       const distance = Phaser.Math.Distance.BetweenPoints(player, {
-        x: map.x + 480 / 2,
-        y: map.y + 480 / 2
+        x: x + chunkSize * tileSize / 2,
+        y: y + chunkSize * tileSize / 2
       });
       if (distance < radius && !spawned) {
-        const l = [];
-        const chunkSize = 30;
-        for (let i = 0; i < layers[map.layer].length; i += chunkSize) {
-          const chunk = layers[map.layer].slice(i, i + chunkSize);
-          l.push(chunk.map(x => x - 1))
-        }
         const displayMap = this.make.tilemap({
-          data: l,
-          tileWidth: 16,
-          tileHeight: 16
+          key: mapName,
+          tileWidth: tileSize,
+          tileHeight: tileSize,
+          width: chunkSize,
+          height: chunkSize
         });
         const tiles = displayMap.addTilesetImage(
-          'tilex',
-          'tilex', 16, 16, 0, 0
+          tileName,
+          tileName, tileSize, tileSize, 0, 0
         );
-        const layer = displayMap.createLayer(0, tiles);
-        layer.setPosition(map.x, map.y);
+        const layer = displayMap.createLayer(map.layer, tiles);
+        layer.setPosition(x, y);
         layer.setDepth(-1);
         this.maps[`${map.x}_${map.y}`] = displayMap;
       } else if (spawned && distance >= radius) {
@@ -61,44 +58,28 @@ class GameScene extends Phaser.Scene {
     })
   }
 
-  spawnShape() {
-    const path = new Phaser.Curves.Path(50, 500);
-    path.lineTo(150, 200);
-    path.cubicBezierTo(400, 500, 200, 100, 400, 100);
-
-    const graphics = this.add.graphics();
-    graphics.clear();
-
-    const x = path.draw(graphics, 100)
-
-    // graphics.fillStyle(Phaser.Display.Color.HexStringToColor("#C7D8AE").color)
-    // graphics.fillPoints(path.getPoints(100))
-  }
-
-
   create() {
     this.graphics = this.add.graphics();
 
     this.maps = {}
-    this.player = this.matter.add.sprite(0, 0, 'ship');
-    this.player.setMass(20);
+    this.player = this.matter.add.sprite(0, 0, 'boat');
+    this.player.setMass(50);
     this.player.setFriction(0.5);
     this.player.setFixedRotation();
     this.player.setOrigin(0.5);
-    this.player.setSize(32 * window.devicePixelRatio, 32 * window.devicePixelRatio);
-
-    const postFxPlugin = this.plugins.get('rexDropShadowPipeline');
-    const postFxPipeline = postFxPlugin
-      .add(this.player, {
-        blur: 3,
-        distance: 0,
-        shadowColor: 0xff0000,
-        alpha: 0.3
-      });
-
     this.playerCircle = new Phaser.Geom.Circle(0, 0, 120);
 
-    this.cameras.main.startFollow(this.player);
+
+    // const postFxPlugin = this.plugins.get('rexDropShadowPipeline');
+    // postFxPlugin
+    //   .add(this.player, {
+    //     blur: 3,
+    //     distance: 0,
+    //     shadowColor: 0xff0000,
+    //     alpha: 0.3
+    //   });
+
+    this.cameras.main.startFollow(this.player, true);
 
     this.add.existing(this.player);
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -106,16 +87,14 @@ class GameScene extends Phaser.Scene {
     this.anims.create({
       key: 'snooze',
       frames: [
-        { key: 'boat_frame_1' },
-        { key: 'boat_frame_2' },
-        { key: 'boat_frame_3' },
-        { key: 'boat_frame_4'}
+        {key: 'boat_frame_1'},
+        {key: 'boat_frame_2'},
+        {key: 'boat_frame_3'},
+        {key: 'boat_frame_4'}
       ],
       frameRate: 4,
       repeat: -1
     });
-
-    this.spawnShape()
 
     // this.player.anims.play('snooze')
 
@@ -144,13 +123,13 @@ class GameScene extends Phaser.Scene {
   }
 
   update(time, xxx) {
-    // this.spawnMap(this.player);
+    this.spawnMap(this.player);
     const velor = 0.001 * window.devicePixelRatio
     if (this.cursors.left.isDown) {
-      this.player.setAngularVelocity(-velor * 5);
+      this.player.setAngularVelocity(-velor * 6);
     }
     if (this.cursors.right.isDown) {
-      this.player.setAngularVelocity(velor * 5);
+      this.player.setAngularVelocity(velor * 6);
     }
     if (this.cursors.up.isDown) {
       this.player.thrustLeft(velor);

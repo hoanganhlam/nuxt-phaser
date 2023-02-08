@@ -11,12 +11,12 @@ export default {
   // render: {
   //   antialias: false,
   // },
-  backgroundColor: '#B6E8DC',
+  backgroundColor: '#b6e8dc',
   physics: {
     default: 'matter',
     matter: {
       gravity: { x: 0, y:0 },
-      debug: true,
+      debug: false,
     },
   },
   plugins: {

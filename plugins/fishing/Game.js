@@ -21,7 +21,7 @@ class Game extends Phaser.Game {
    */
   constructor(config) {
     super(config);
-    window.socket = io(window.API_DOMAIN);
+    // window.socket = io(window.API_DOMAIN);
     this.registerResizeHandler();
     this.addScenes();
     this.startScene();
