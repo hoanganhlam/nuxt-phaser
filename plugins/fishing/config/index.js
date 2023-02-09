@@ -8,9 +8,9 @@ export default {
   width: window.innerWidth,
   height: window.innerHeight,
   banner: true,
-  // render: {
-  //   antialias: false,
-  // },
+  render: {
+    antialias: false,
+  },
   backgroundColor: '#b6e8dc',
   physics: {
     default: 'matter',
