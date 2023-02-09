@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import GAME_CONFIG from '../../config';
 import CONFIG from '../../config/game';
+
 // import AnimationManager from './AnimationManager';
 
 
@@ -12,13 +13,12 @@ class Player extends Phaser.Physics.Matter.Sprite {
     // this.animationManager = new AnimationManager(this);
     this.scene = scene;
     this.graphics = scene.graphics;
-    this.setMass(40);
+    this.setMass(30);
     this.setFriction(0.5);
     this.setFixedRotation();
     this.setOrigin(0.5);
-
     this.playerCircle = new Phaser.Geom.Circle(0, 0, 120);
-
+    this.xPath = scene.add.path();
     const particles = scene.add.particles('tween');
     particles.setDepth(-1)
     const emitter = particles.createEmitter({
@@ -47,14 +47,12 @@ class Player extends Phaser.Physics.Matter.Sprite {
 
     }.bind(this));
 
-    const postFxPlugin = scene.plugins.get('rexDropShadowPipeline');
-    postFxPlugin
-      .add(this, {
-        blur: 3,
-        distance: 0,
-        shadowColor: 0xff0000,
-        alpha: 0.3
-      });
+    scene.input.on('pointerdown', (pointer) => {
+      this.xPath.curves.length = 0;
+      this.xPath.cacheLengths.length = 0;
+      const x = scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+      this.xPath.add(new Phaser.Curves.Line([this.x, this.y, x.x, x.y]))
+    });
   }
 
   /**
@@ -65,6 +63,8 @@ class Player extends Phaser.Physics.Matter.Sprite {
     this.playerCircle.x = this.x;
     this.playerCircle.y = this.y;
     this.graphics.fillStyle(0x001100, 0.05).fillCircleShape(this.playerCircle);
+    this.graphics.lineStyle(1, 0xffffff, 1);
+    this.xPath.draw(this.graphics);
   }
 
   checkOverlap() {

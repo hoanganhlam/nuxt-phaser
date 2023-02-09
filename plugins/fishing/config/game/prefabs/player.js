@@ -8,9 +8,9 @@ const PLAYER = {
     DEAD: 'dino-dead',
   },
   POS: {
-    INITIAL_X: 100,
-    X: 50,
-    Y: 50,
+    INITIAL_X: 0,
+    X: 0,
+    Y: 0,
   },
   GRAVITY: {
     Y: 2500,

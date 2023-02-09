@@ -64,8 +64,8 @@ class GameScene extends Phaser.Scene {
     this.graphics = this.add.graphics();
     this.mainPlayer = new Player(this);
     this.maps = {}
+    this.add.circle(0, 0, 2, 0xff0000)
     this.cameras.main.startFollow(this.mainPlayer, true);
-
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
@@ -84,6 +84,7 @@ class GameScene extends Phaser.Scene {
     if (this.cursors.down.isDown) {
       this.mainPlayer.thrustRight(velor);
     }
+    this.mainPlayer.update()
   }
 }
 
