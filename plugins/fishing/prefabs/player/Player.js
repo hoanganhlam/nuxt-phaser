@@ -48,10 +48,10 @@ class Player extends Phaser.Physics.Matter.Sprite {
     }.bind(this));
 
     scene.input.on('pointerdown', (pointer) => {
-      this.xPath.curves.length = 0;
-      this.xPath.cacheLengths.length = 0;
-      const x = scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
-      this.xPath.add(new Phaser.Curves.Line([this.x, this.y, x.x, x.y]))
+      // this.xPath.curves.length = 0;
+      // this.xPath.cacheLengths.length = 0;
+      // const x = scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+      // this.xPath.add(new Phaser.Curves.Line([this.x, this.y, x.x, x.y]))
     });
   }
 
@@ -63,8 +63,8 @@ class Player extends Phaser.Physics.Matter.Sprite {
     this.playerCircle.x = this.x;
     this.playerCircle.y = this.y;
     this.graphics.fillStyle(0x001100, 0.05).fillCircleShape(this.playerCircle);
-    this.graphics.lineStyle(1, 0xffffff, 1);
-    this.xPath.draw(this.graphics);
+    // this.graphics.lineStyle(1, 0xffffff, 1);
+    // this.xPath.draw(this.graphics);
   }
 
   checkOverlap() {

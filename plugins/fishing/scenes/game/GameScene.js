@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import CONFIG from '../../config/game';
 import Player from '../../prefabs/player/Player';
-
+import Ship from '../../prefabs/ship/Ship';
 const chunkSize = 40;
 const tileSize = 16;
 const mapName = 'map';
@@ -62,7 +62,8 @@ class GameScene extends Phaser.Scene {
 
   create() {
     this.graphics = this.add.graphics();
-    this.mainPlayer = new Player(this);
+    // this.mainPlayer = new Player(this);
+    this.mainPlayer = new Ship(this);
     this.maps = {}
     this.add.circle(0, 0, 2, 0xff0000)
     this.cameras.main.startFollow(this.mainPlayer, true);
@@ -79,12 +80,16 @@ class GameScene extends Phaser.Scene {
       this.mainPlayer.setAngularVelocity(velor * 5);
     }
     if (this.cursors.up.isDown) {
-      this.mainPlayer.thrustLeft(velor);
+      this.mainPlayer.thrust(velor * 2);
+    } else {
+      this.mainPlayer.thrust(velor);
     }
     if (this.cursors.down.isDown) {
-      this.mainPlayer.thrustRight(velor);
+      this.mainPlayer.thrustBack(velor / 2);
     }
-    this.mainPlayer.update()
+    this.mainPlayer.update();
+    // this.ship.thrust(velor / 1.5)
+    // this.ship.rotation = Phaser.Math.Angle.BetweenPoints(this.ship, this.mainPlayer);
   }
 }
 

@@ -19,7 +19,7 @@ class BootScene extends Phaser.Scene {
 
   preload() {
     this.load.path = '/fishing/';
-    // this.load.spritesheet('ship_tiles', 'ships.png', {frameWidth: 32, frameHeight: 32, spacing: 1});
+    this.load.spritesheet('ship_tiles', 'ships.png', {frameWidth: 32, frameHeight: 32, spacing: 1});
 
     this.load.image('boat', 'boat.png');
     this.load.image('tiles', 'tiles.png');
