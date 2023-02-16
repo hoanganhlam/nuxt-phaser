@@ -14,11 +14,30 @@ const SIDE_RIGHT = 1;
 const SIDE_DOWN = 2;
 const SIDE_LEFT = 3;
 
+function push_position(player) {
+  window.socket.emit('player_move', {
+    x: player.x,
+    y: player.y,
+    angle: player.angle,
+    direction: player.direction,
+    destroying: player.destroying,
+    isReady: player.isReady,
+    rotating: player.rotating,
+    isReverse: player.isReverse,
+    speed: player.speed,
+    state: player.state
+  })
+}
 
+/**
+ * Player
+ * @class Player
+ * @extends {Phaser.Physics.Arcade.Sprite}
+ */
 class Player extends Phaser.Physics.Matter.Sprite {
   static CONFIG = CONFIG.PREFABS.PLAYER;
 
-  constructor(scene, x = Player.CONFIG.POS.INITIAL_X, y = Player.CONFIG.POS.Y) {
+  constructor(scene, socket_id, x = Player.CONFIG.POS.INITIAL_X, y = Player.CONFIG.POS.Y) {
     super(
       scene.matter.world,
       x, y,
@@ -26,7 +45,7 @@ class Player extends Phaser.Physics.Matter.Sprite {
       1,
       {label: 'player'}
     );
-
+    this.socket_id = socket_id;
     this.animationManager = new AnimationManager(this);
     this.scene = scene;
     this.displayWidth = 40;
@@ -56,13 +75,7 @@ class Player extends Phaser.Physics.Matter.Sprite {
     this.setAlpha(0);
     scene.add.existing(this);
     scene.input.keyboard.on('keydown-SPACE', function (event) {
-      if (this.isDead) {
-        this.reset()
-      } else if (this.state === Player.CONFIG.STATES.RUNNING) {
-        this.flip()
-      } else if (this.state === Player.CONFIG.STATES.IDLING) {
-        this.setState(Player.CONFIG.STATES.RUNNING);
-      }
+      window.socket.emit('player_flip');
       if (this.firstClickTime === 0) {
         this.firstClickTime = new Date().getTime();
       } else {
@@ -78,7 +91,9 @@ class Player extends Phaser.Physics.Matter.Sprite {
     if (this.firstClickTime > 0) {
       const range = this.secondClickTime - this.firstClickTime;
       if (0 < range && range < 200) {
-        this.kick()
+        window.socket.emit('player_kick', {
+          x: this.x, y: this.y
+        });
         this.secondClickTime = 0;
         this.firstClickTime = 0;
       } else {
@@ -91,6 +106,7 @@ class Player extends Phaser.Physics.Matter.Sprite {
     }
 
     this.animationManager.update();
+    if (this.isSelf) push_position(this);
     if (this.state !== Player.CONFIG.STATES.RUNNING) {
       this.setVelocity(0, 0);
       return;
@@ -225,11 +241,11 @@ class Player extends Phaser.Physics.Matter.Sprite {
       const item = obstacles[index]
       if (
         Phaser.Geom.Intersects.RectangleToRectangle(boundsA, item.getBounds()) &&
-        this.isReady &&
+        this.isReady && this.isSelf &&
         this.alpha > GAME_CONFIG.maxAlpha &&
         item.time_start < now && now < item.time_end
       ) {
-        this.die()
+        window.socket.emit('player_die')
       }
     }
   }
@@ -241,6 +257,10 @@ class Player extends Phaser.Physics.Matter.Sprite {
    */
   get isDead() {
     return this.state === Player.CONFIG.STATES.DEAD;
+  }
+
+  get isSelf() {
+    return this.socket_id === window.socket.id
   }
 
   /**

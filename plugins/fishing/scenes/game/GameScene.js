@@ -72,7 +72,7 @@ class GameScene extends Phaser.Scene {
 
   update(time, xxx) {
     this.spawnMap(this.mainPlayer);
-    const velor = 0.001 * window.devicePixelRatio
+    const velor = 0.001
     if (this.cursors.left.isDown) {
       this.mainPlayer.setAngularVelocity(-velor * 5);
     }

@@ -1,5 +1,6 @@
 import PrefabGroup from '../../abstract/PrefabGroup';
-import Tree from '../obstacles/tree/Tree';
+import Tree from './tree/Tree';
+import Bird from './bird/Bird';
 
 /**
  * Obstacles group
@@ -15,8 +16,6 @@ class Obstacles extends PrefabGroup {
    */
   constructor(scene) {
     super(scene);
-    this.cat = scene.matter.world.nextCategory()
-    this.spawn()
   }
 
   update(time) {
@@ -25,19 +24,25 @@ class Obstacles extends PrefabGroup {
     })
   }
 
-  spawn() {
+  spawn(data) {
     this.scene.time.delayedCall(2000, () => {
-        this.spawnItem()
-        this.spawnItem()
-        this.spawnItem()
+        const now = new Date().getTime();
+        data.forEach(item => {
+          if (now < item.time_end) {
+            this.spawnItem(item)
+          }
+        })
       }
     );
   }
 
-  spawnItem() {
-    const newObstacle = new Tree(this.scene);
-    newObstacle.setCollisionCategory(this.cat)
-    newObstacle.parentCat = this.cat
+  spawnItem(data) {
+    let newObstacle;
+    if (data.type === 0) {
+      newObstacle = new Bird(this.scene, data);
+    } else {
+      newObstacle = new Tree(this.scene, data);
+    }
     this.add(newObstacle)
   }
 

@@ -2,7 +2,7 @@
   <div :class="{'bg-[#dff6f5]': $route.name === 'index'}">
     <div class="content-wrapper">
       <div class="main-wrapper">
-        <div class="flex-1">
+        <div class="flex-1 flex items-center">
           <nuxt/>
         </div>
         <p-footer/>

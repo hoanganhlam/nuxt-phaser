@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import CONFIG from '../../config/game';
-import GameScene from "@/plugins/oxacircle/scenes/game/GameScene";
+import GameScene from "@/plugins/bak/oxacircle/scenes/game/GameScene";
 
 // import GameScene from '../game/GameScene';
 

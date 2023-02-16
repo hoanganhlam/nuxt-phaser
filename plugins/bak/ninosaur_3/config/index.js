@@ -1,17 +1,23 @@
 import Phaser from 'phaser';
 import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
-import DropShadowPipelinePlugin from 'phaser3-rex-plugins/plugins/dropshadowpipeline-plugin.js';
 
 export default {
   parent: 'game',
+  title: 'Dino',
+  url: 'https://github.com/Autapomorph/dino',
+  version: '1.2.1',
   type: Phaser.WEBGL,
-  width: window.innerWidth,
-  height: window.innerHeight,
   banner: true,
   render: {
     antialias: false,
   },
-  backgroundColor: '#b6e8dc',
+  backgroundColor: '#dff6f5',
+  scale: {
+    // mode: Phaser.Scale.,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: 500,
+    height: 500,
+  },
   physics: {
     default: 'matter',
     matter: {
@@ -26,11 +32,7 @@ export default {
         key: "matterCollision", // Where to store in Scene.Systems, e.g. scene.sys.matterCollision
         mapping: "matterCollision" // Where to store in the Scene, e.g. scene.matterCollision
       }
-    ],
-    global: [{
-      key: 'rexDropShadowPipeline',
-      plugin: DropShadowPipelinePlugin,
-      start: true
-    }]
-  }
+    ]
+  },
+  maxAlpha: 0.75
 };

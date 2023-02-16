@@ -4,6 +4,8 @@ import CONFIG from './config/game';
 import BootScene from './scenes/boot/BootScene';
 import GameScene from './scenes/game/GameScene';
 
+const {io} = require("socket.io-client");
+
 /**
  * Game
  * @class Game
@@ -18,6 +20,7 @@ class Game extends Phaser.Game {
    */
   constructor(config) {
     super(config);
+    window.socket = io(window.API_DOMAIN);
     this.registerResizeHandler();
     this.addScenes();
     this.startScene();
