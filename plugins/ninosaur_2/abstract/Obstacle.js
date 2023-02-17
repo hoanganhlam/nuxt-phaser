@@ -1,22 +1,8 @@
 import Phaser from 'phaser';
-
-import CONFIG from '../config/game';
 import GAME_CONFIG from "@/plugins/ninosaur_2/config";
 
-/**
- * Obstacle
- * @class Obstacle
- * @extends {Phaser.Physics.Arcade.Sprite}
- */
+
 class Obstacle extends Phaser.Physics.Matter.Sprite {
-  /**
-   * Creates an instance of Obstacle
-   * @param {Phaser.Scene} scene - The Scene to which this Obstacle belongs
-   * @param {number} x - The horizontal position of this Obstacle in the world
-   * @param {number} y - The vertical position of this Obstacle in the world
-   * @param {number} frame - The frame from the Texture this Obstacle is rendering with
-   * @param {object} options - The frame from the Texture this Obstacle is rendering with
-   */
   constructor(scene, x, y, frame, options) {
     super(scene.matter.world, x, y, 'nino-obstacles', frame, {label: 'obstacle'});
     this.time_start = options.time_start;
@@ -48,35 +34,39 @@ class Obstacle extends Phaser.Physics.Matter.Sprite {
       this.alpha = 1;
     }
     if (now > this.time_end && !this.isDying) {
-      this.isDying = true;
-      this.alpha = GAME_CONFIG.maxAlpha;
-      this.scene.tweens.add({
-        targets: this,
-        alpha: {value: 0, duration: 2000, ease: 'Power2'},
-      });
-      const _this = this;
-      setTimeout(function () {
-        _this.die();
-      }, 2000);
+      this.out()
     }
   }
 
-  /**
-   * Freeze obstacle
-   */
-  freeze() {}
+  hit() {
+    this.isDying = true;
+    this.setVelocityY(2);
+    setTimeout(() => {
+      this.out()
+    }, 1000)
+  }
 
-  /**
-   * Kill obstacle
-   */
+  out() {
+    this.isDying = true;
+    this.alpha = GAME_CONFIG.maxAlpha;
+    this.scene.tweens.add({
+      targets: this,
+      alpha: {value: 0, duration: 2000, ease: 'Power2'},
+    });
+    const _this = this;
+    setTimeout(function () {
+      _this.die();
+    }, 2000);
+  }
+
+  freeze() {
+  }
+
   die() {
     this.freeze()
     this.destroy();
   }
 
-  /**
-   * Reset obstacle
-   */
   reset() {
     this.die();
   }

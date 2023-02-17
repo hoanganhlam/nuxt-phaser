@@ -5,8 +5,7 @@ import AnimationManager from './AnimationManager';
 
 let gameOptions = {
   gameGravity: 0.5,
-  heroSpeed: 1.2,
-  jump: -45
+  heroSpeed: 1.2
 }
 
 const SIDE_UP = 0;
@@ -36,16 +35,12 @@ class Player extends Phaser.Physics.Matter.Sprite {
 
     this.destroying = false;
     this.isReady = false;
-    this.score = 0;
-    this.totalScore = 0;
+    this.score = window.playerScore || 0;
+    this.totalScore = window.totalPlayerScore || 0;
     this.direction = SIDE_UP;
     this.rotating = false;
     this.isReverse = false;
     this.speed = gameOptions.heroSpeed;
-    this.isJumping = false;
-    this.isFreeze = false;
-    this.firstClickTime = 0;
-    this.secondClickTime = 0;
 
     this.scene.tweens.add({
       targets: this,
@@ -55,7 +50,7 @@ class Player extends Phaser.Physics.Matter.Sprite {
     this.setState(Player.CONFIG.STATES.IDLING);
     this.setAlpha(0);
     scene.add.existing(this);
-    scene.input.keyboard.on('keydown-SPACE', function (event) {
+    scene.input.keyboard.on('keydown-R', function (event) {
       if (this.isDead) {
         this.reset()
       } else if (this.state === Player.CONFIG.STATES.RUNNING) {
@@ -63,11 +58,9 @@ class Player extends Phaser.Physics.Matter.Sprite {
       } else if (this.state === Player.CONFIG.STATES.IDLING) {
         this.setState(Player.CONFIG.STATES.RUNNING);
       }
-      if (this.firstClickTime === 0) {
-        this.firstClickTime = new Date().getTime();
-      } else {
-        this.secondClickTime = new Date().getTime();
-      }
+    }.bind(this));
+    scene.input.keyboard.on('keydown-SPACE', function (event) {
+      this.kick()
     }.bind(this));
   }
 
@@ -75,80 +68,26 @@ class Player extends Phaser.Physics.Matter.Sprite {
    * Update player
    */
   update(time) {
-    if (this.firstClickTime > 0) {
-      const range = this.secondClickTime - this.firstClickTime;
-      if (0 < range && range < 200) {
-        this.kick()
-        this.secondClickTime = 0;
-        this.firstClickTime = 0;
-      } else {
-        const now = new Date().getTime();
-        if (now - this.firstClickTime >= 200) {
-          this.secondClickTime = 0;
-          this.firstClickTime = 0;
-        }
-      }
-    }
-
     this.animationManager.update();
     if (this.state !== Player.CONFIG.STATES.RUNNING) {
       this.setVelocity(0, 0);
+      this.checkOverlap();
       return;
     }
     if (this.speed < 1.8) this.speed = this.speed + 0.0006;
     if (!this.isReady) this.isReady = true;
     if (!this.rotating) {
-      if (!this.isJumping) {
-        if (this.isReverse) {
-          this.moveCounterClockwise();
-        } else {
-          this.moveClockwise();
-        }
+      if (this.isReverse) {
+        this.moveCounterClockwise();
+      } else {
+        this.moveClockwise();
       }
       this.checkRotation();
     }
     this.checkOverlap();
   }
 
-  jump() {
-    const s1 = {x: this.x, y: this.y}
-    const s2 = {x: this.x, y: this.y}
-    switch (this.direction) {
-      case SIDE_UP:
-        s1.x = s1.x + (this.isReverse ? -20 : 20);
-        s1.y = s1.y - 40;
-        s2.x = s2.x + (this.isReverse ? -50 : 50);
-        break;
-      case SIDE_DOWN:
-        s1.x = s1.x + (this.isReverse ? 20 : -20);
-        s1.y = s1.y + 40;
-        s2.x = s2.x + (this.isReverse ? 50 : -50);
-        break;
-      case SIDE_LEFT:
-        s1.x = s1.x - 40;
-        s1.y = s1.y + (this.isReverse ? 20 : -20);
-        s2.y = s2.y + (this.isReverse ? 50 : -50);
-        break;
-      case SIDE_RIGHT:
-        s1.x = s1.x + 40;
-        s1.y = s1.y + (this.isReverse ? -20 : 20);
-        s2.y = s2.y + (this.isReverse ? -50 : 50);
-        break;
-    }
-    this.scene.tweens.timeline({
-      targets: this,
-      ease: 'Linear',
-      duration: 120,
-      repeat: 0,
-      tweens: [s1, s2],
-      onComplete: () => {
-        this.isJumping = false;
-      }
-    });
-  }
-
   flip() {
-    // this.jump();
     this.isReverse = !this.isReverse;
     this.speed = gameOptions.heroSpeed;
   }
@@ -156,8 +95,8 @@ class Player extends Phaser.Physics.Matter.Sprite {
   kick() {
     this.setState(Player.CONFIG.STATES.KICK);
     setTimeout(() => {
-      this.setState(Player.CONFIG.STATES.RUNNING)
-    }, 500);
+      this.setState(Player.CONFIG.STATES.RUNNING);
+    }, 1000);
   }
 
   /**
@@ -185,6 +124,8 @@ class Player extends Phaser.Physics.Matter.Sprite {
    * Set player dead | Handle gameover
    */
   die() {
+    this.totalScore = this.totalScore + this.score;
+    window.totalPlayerScore = this.totalScore;
     this.setState(Player.CONFIG.STATES.DEAD);
     switch (this.direction) {
       case SIDE_UP:
@@ -222,14 +163,17 @@ class Player extends Phaser.Physics.Matter.Sprite {
     const boundsA = this.getBounds();
     const obstacles = this.scene.obstacles.getChildren()
     for (const index in obstacles) {
-      const item = obstacles[index]
+      const item = obstacles[index];
       if (
         Phaser.Geom.Intersects.RectangleToRectangle(boundsA, item.getBounds()) &&
         this.isReady &&
         this.alpha > GAME_CONFIG.maxAlpha &&
-        item.time_start < now && now < item.time_end
+        item.time_start < now && now < item.time_end &&
+        this.state === Player.CONFIG.STATES.KICK && !item.isDying
       ) {
-        this.die()
+        this.score = this.score + 1;
+        window.playerScore = this.score;
+        item.hit()
       }
     }
   }
